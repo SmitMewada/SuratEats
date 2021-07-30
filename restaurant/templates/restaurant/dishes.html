@@ -1,0 +1,75 @@
+{% extends 'restaurant/base.html' %} {% load restFilters %} {% block content %}
+
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+        <div>
+            <a href={% url 'add-dish' %} class="btn-a btn-add">Add <i class="fas fa-plus"></i></a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="table dish-table">
+            <thead>
+                <tr>
+                    <th>Dish</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for dish in dishes %}
+                <tr id={{dish.id}}>
+                    <td>{{dish.name}}</td>
+                    <td>{{dish.price|currency}}</td>
+                    <td>{{dish.category}}</td>
+                    <td>
+                        {{dish.description}}
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a href={% url 'edit-dish' dish.id %} class="btn-a btn-action btn-edit"><i
+                                    class="fas fa-edit btn-icon mgright-1"></i></a>
+
+                            <a href="" class="btn-a btn-action btn-delete"><i
+                                    class="fas fa-trash-alt btn-icon btn-danger mgleft-1"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-delete").click(function (e) {
+            e.preventDefault();
+            const parent = $(this).parents("tr")
+            const dishID = parent.attr("id")
+
+            $.ajax({
+                url: "",
+                type: "GET",
+                data: {
+                    dishID
+                },
+                success: (data) => {
+                    if (data.url) {
+                        location.reload()
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock content %}

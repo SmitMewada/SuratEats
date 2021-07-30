@@ -1,0 +1,70 @@
+{% extends 'restaurant/base.html' %} {% load restFilters %} {% block content %}
+
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+        <div>
+            <a href={% url 'cat-form' 0 %} class="btn-a btn-add">Add category<i class="fas fa-plus"></i></a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="table dish-table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                  
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for category in categories %}
+                <tr id={{category.id}}>
+                    <td>{{category.category}}</td>
+    
+                    <td>
+                        <div class="actions">
+                            <a href={% url 'cat-form' category.id %} class="btn-a btn-action btn-edit"><i
+                                    class="fas fa-edit btn-icon mgright-1"></i></a>
+
+                            <a href="" class="btn-a btn-action btn-delete"><i
+                                    class="fas fa-trash-alt btn-icon btn-danger mgleft-1"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-delete").click(function (e) {
+            e.preventDefault();
+            const parent = $(this).parents("tr")
+            const catID = parent.attr("id")
+            
+            $.ajax({
+                url: "",
+                type: "GET",
+                data: {
+                    catID
+                },
+                success: (data) => {
+                  
+                    if (data.success) {
+                        location.reload()
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock content %}

@@ -1,0 +1,43 @@
+{% extends 'administrator/base.html' %}
+{% load restFilters %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="dashboard-headline-section">
+        <h1 class="headline">Dashboard</h1>
+    </div>
+
+    <div class="dash-cards">
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-pizza-slice green"></i>Total Restaurant</span>
+            <h2 class="dash-card-value">{{total_restaurants}}</h2>
+        </div>
+
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-money-bill-alt purple"></i>Total Earnigs</span>
+            <h2 class="dash-card-value">{{total_income|currency}}</h2>
+        </div>
+
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-pause-circle orange"></i>Total customers</span>
+            <h2 class="dash-card-value">{{total_customers}}</h2>
+        </div>
+
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-pause-circle orange"></i>Pending requests</span>
+            <h2 class="dash-card-value">{{pending_requests}}</h2>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="income-graph" id="curve_chart">
+
+        </div>
+
+       
+    </div>
+</div>
+
+{% endblock content %}

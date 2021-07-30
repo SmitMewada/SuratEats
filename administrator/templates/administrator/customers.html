@@ -1,0 +1,98 @@
+{% extends 'administrator/base.html' %} {% load restFilters %} {% block content %}
+
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+        
+    </div>
+
+    <div class="table-container">
+        <table class="table dish-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>E-mail</th>
+                    <th>Phone</th>
+                    
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for customer in customers %}
+                <tr id={{customer.id}}>
+                    <td>{{customer.first_name}} {{customer.last_name}}</td>
+                    <td>{{customer.email}}</td>
+                    <td>{{customer.phone}}</td>
+                   
+                    <td>
+                        <div class="actions">
+                            <a href="" class="btn-a btn-action btn-edit">
+                                    <i class="fas fa-ban btn-icon mgright-1"></i>
+                            </a>
+
+                            
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+          $(".btn-edit").click(function (e) {
+            e.preventDefault()
+            const parent = $(this).parents("tr")
+            const custID = parent.attr("id")
+            const childI = $(this).find("i")
+            const isBlocked = childI.hasClass("btn-danger")
+        
+            const decision = isBlocked ? confirm("Do you want to unblock this customer") : confirm("Do you want to block this customer?")
+
+            if (decision) {
+                if (isBlocked) {
+                    $.ajax({
+                        url: "",
+                        type: "GET", 
+                        data: {
+                            custID,
+                            "action": "unblock"
+                        },
+                        success: (data) => {
+                            
+                            if (data.success) {
+                                console.log(data)
+                                childI.removeClass("btn-danger")
+                            }
+                        }
+                    })
+
+                } else {
+                    $.ajax({
+                        url: "",
+                        type: "GET",
+                        data: {
+                            custID,
+                            "action": "block"
+                        },
+                        success: (data) => {
+                            console.log(data)
+                            if (data.success) {
+                                childI.addClass("btn-danger")
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    })
+</script>
+
+{% endblock content %}

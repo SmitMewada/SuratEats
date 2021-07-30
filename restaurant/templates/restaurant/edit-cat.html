@@ -1,0 +1,34 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+    </div>
+
+    <div class="form-container">
+        <form class="form login-form" method="POST" enctype="multipart/form-data" id="dishForm">
+            {% csrf_token %}
+            <div class="form-controls">
+                <label>{{form.category.label}}</label>
+                {{form.category}}
+            </div>
+            
+            <div class="form-controls">
+                <input type="submit" class="btn-update" value={{page_name}}>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+
+<script>
+   
+</script>
+
+
+
+
+{% endblock content %}

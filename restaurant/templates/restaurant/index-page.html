@@ -1,0 +1,47 @@
+{% extends 'restaurant/base.html' %}
+{% load restFilters %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="dashboard-headline-section">
+        <h1 class="headline">Dashboard</h1>
+    </div>
+
+    <div class="dash-cards">
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-pizza-slice green"></i>Total Orders</span>
+            <h2 class="dash-card-value">{{order_count}}</h2>
+        </div>
+
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-money-bill-alt purple"></i>Total Earnigs</span>
+            <h2 class="dash-card-value">{{income|currency}}</h2>
+        </div>
+
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-pause-circle orange"></i>Pending orders</span>
+            <h2 class="dash-card-value">{{pending_orders}}</h2>
+        </div>
+
+        <div class="dash-card">
+            <span class="dash-card-header"><i class="fas fa-money-bill-alt purple"></i>Commision rate</span>
+            <h2 class="dash-card-value">15%</h2>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="income-graph" id="curve_chart">
+
+        </div>
+
+        <div class="income-graph" id="order_chart">
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}

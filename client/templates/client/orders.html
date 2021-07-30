@@ -1,0 +1,67 @@
+{% extends 'client/base.html' %}
+{% load customFilters %}
+
+{% block content %}
+
+<!-- Order page starts -->
+
+<main class="container cart-page row-align">
+    <h1 class="order-headline">Your orders</h1>
+    <section class="cart-cards">
+    
+        
+        {% for order in orders %}
+
+        <div class="cart-card" id={{order.id}}>
+            <div class="cart-card-image">
+                <img src={{order.dish.image.url}} alt="">
+                <div class="cart-dish-body order-body-medium">
+                    <h3>{{order.dish.name}}</h3>
+                </div>
+            </div>
+
+            <div class="cart-card-body">
+                <h3>Quantity: <span class="cart-item-qty font-large">{{order.qty}}</span></h3>
+                <h3>Restaurant: <span class="font-large">{{order.restaurant.name}}</span></h3>
+                <h3>Price: <span class="price font-large">{{order.price|currency}}</span></h3>
+                <h3>total: <span class="price font-large">{{order|sub_total|currency}}</span></h3>
+                {% if not order.status %}<a href="" class="btn btn-remove">Cancel order</a>{% endif %}
+
+            </div>
+            <div class="cart-card-body order-wt-md">
+                <h3>Address: <p class="address">{{order.address}}.</p>
+                </h3>
+                <h3>Phone: <span class="order-phone">+91-{{order.phone}}</span></h3>
+                <h3>Status: <span class="font-large{% if order.status %} delivered{% else %} pending{% endif %}">{% if order.status %}Delivered{% else %}On the way{% endif %}</span></h3>
+            </div>
+        </div>
+        {% endfor %}
+
+    </section>
+
+</main>
+
+<script>
+    $(document).ready(function() {
+        $(".btn-remove").click(function(e) {
+            e.preventDefault()
+            const orderID = $(this).parents("div.cart-card").attr("id")
+            const decision = confirm("Are you sure you want to cancel this order?")
+
+            if (decision) {
+                $.ajax({
+                    url: "",
+                    type: "GET",
+                    data: {orderID},
+                    success: (data) => {
+                        if (data.success) {
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>
+
+<!-- Orders page ends -->
+{% endblock content %}

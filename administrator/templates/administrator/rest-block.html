@@ -1,0 +1,121 @@
+{% extends 'administrator/base.html' %} {% load restFilters %} {% block content %}
+
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+        
+    </div>
+
+    <div class="table-container">
+        <table class="table dish-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Owner</th>
+                    <th>E-mail</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for restaurant in restaurants %}
+                <tr id={{restaurant.id}}>
+                    <td>{{restaurant.name}}</td>
+                    <td>{{restaurant.customer.first_name}} {{restaurant.customer.last_name}} </td>
+                    <td>{{restaurant.customer.email}}</td>
+                    <td>{{restaurant.customer.phone}}</td>
+                    <td>{{restaurant.address}}</td>
+                   
+                    <td>
+                        <div class="actions">
+                            <a href="" class="btn-a btn-action btn-ban">
+                                    <i class="fas fa-ban btn-icon mgright-1 {% if restaurant.blocked %}btn-danger{% endif %}"></i>
+                            </a>
+
+                            <a href="" class="btn-a btn-action btn-online">
+                                    <i class="fas fa-circle btn-icon"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        
+         $(".btn-ban").click(function (e) {
+            e.preventDefault()
+            const parent = $(this).parents("tr")
+            const restID = parent.attr("id")
+            const childI = $(this).find("i")
+            console.log(childI)
+            var decision = childI.hasClass("btn-danger") ? confirm("Do you want to unblock this restaurant?") : confirm("Do you want to block this restaurant?")
+
+            if (decision) {
+                if (childI.hasClass("btn-danger")) {
+                    $.ajax({
+                        url: "",
+                        type: "GET",
+                        data: {
+                            restID,
+                            "action": "unblock"
+                        },
+                        success: (data) => {
+                            console.log(data)
+                            if (data.success) {
+                                childI.removeClass("btn-danger")
+                            }
+                        }
+                    })
+
+                } else {
+                    $.ajax({
+                        url: "",
+                        type: "GET",
+                        data: {
+                            restID,
+                            "action": "block"
+                        },
+                        success: (data) => {
+                            console.log(data)
+                            if (data.success) {
+                                childI.addClass("btn-danger")
+                            }
+                        }
+                    })
+                }
+            }
+        })
+
+        $(".btn-delete").click(function (e) {
+            e.preventDefault();
+            const parent = $(this).parents("tr")
+            const restID = parent.attr("id")
+
+            $.ajax({
+                url: "",
+                type: "GET",
+                data: {
+                    restID
+                },
+                success: (data) => {
+                    if (data.url) {
+                        location.reload()
+                    }
+                }
+            })
+        })
+    })
+</script>
+
+{% endblock content %}

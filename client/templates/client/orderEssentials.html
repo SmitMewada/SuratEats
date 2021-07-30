@@ -1,0 +1,57 @@
+{% extends 'client/base.html' %}
+{% block content %}
+
+
+<!-- Signup page starts -->
+
+<main class="container signup-section">
+
+    <form method="POST" class="form signup-form" id="signup-form">
+        <div class="loading-bar loading"></div>
+        <h1 class="form-headline">Order Details</h1>
+        <div class="signup-block-1 block active-block" id="signup-block-1">
+
+            {% csrf_token %}
+
+            <div class="form-controls">
+                <label>{{form.house_no.label}}</label>
+                {{form.house_no}}
+            </div>
+            <div class="form-controls">
+                <label>{{form.street.label}} </label>
+                {{form.street}}
+            </div>
+            <div class="form-controls">
+                <label>{{form.area.label}} </label>
+                {{form.area}}
+            </div>
+            <div class="form-controls">
+                <label>{{form.pincode.label}} </label>
+                {{form.pincode}}
+            </div>
+            <div class="form-controls">
+                <label>Phone </label>
+                <input type="text" name="phone" class="form-input" placeholder="Phone">
+            </div>
+
+
+            <div class="form-controls btn-al-right">
+                <input type="submit" class="btn-block-control" id="block-btn-next-1" value="Place order">
+            </div>
+        </div>
+
+    
+
+    </form>
+</main>
+
+
+<script>
+    $(document).ready(function() {
+
+    })
+</script>
+
+<!-- Signup page ends -->
+
+{% endblock content %}

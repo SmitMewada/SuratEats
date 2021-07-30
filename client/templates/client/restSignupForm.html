@@ -1,0 +1,253 @@
+{% extends 'client/base.html' %}
+{% block content %}
+
+
+<!-- Signup page starts -->
+
+<main class="container signup-section">
+
+    <form method="POST" class="form signup-form" id="signup-form" enctype="multipart/form-data">
+        <div class="loading-bar loading"></div>
+        <h1 class="form-headline">Restaurant signup form</h1>
+        <div class="signup-block-1 block active-block" id="signup-block-1">
+
+            {% csrf_token %}
+
+            <div class="form-controls">
+                <label>{{signup_form.first_name.label}}</label>
+                {{signup_form.first_name}}
+            </div>
+            <div class="form-controls">
+                <label>{{signup_form.last_name.label}} </label>
+                {{signup_form.last_name}}
+            </div>
+            <div class="form-controls">
+                <label>{{signup_form.email.label}} </label>
+                {{signup_form.email}}
+            </div>
+            <div class="form-controls btn-al-right">
+                <button class="btn-block-control" id="block-btn-next-1">Next</button>
+            </div>
+        </div>
+
+        <div class="signup-block-2 block" id="signup-block-2">
+
+            <div class="form-controls">
+                <label>{{signup_form.password.label}} </label>
+                {{signup_form.password}}
+            </div>
+            <div class="form-controls">
+                <label>Confirm Password: </label>
+                <input type="text" placeholder="Confirm password" class="form-input" name="cpassword">
+            </div>
+
+            <div class="form-controls">
+                <label>{{signup_form.phone.label}} </label>
+                {{signup_form.phone}}
+            </div>
+
+
+            <div class="form-controls btn-al-right space-between">
+                <button class="btn-block-control" id="block-btn-previous-2">Previous</button>
+                <button class="btn-block-control" id="block-btn-next-2">Next</button>
+
+            </div>
+        </div>
+
+        <div class="signup-block-3 block" id="signup-block-3">
+
+            <div class="form-controls">
+                <label>{{address_form.house_no.label}} </label>
+                {{address_form.house_no}}
+            </div>
+            <div class="form-controls">
+                <label>{{address_form.street.label}} </label>
+                {{address_form.street}}
+            </div>
+
+            <div class="form-controls">
+                <label>{{rest_form.area.label}} </label>
+                {{rest_form.area}}
+            </div>
+
+            <div class="form-controls">
+                <label>{{address_form.pincode.label}) </label>
+                {{address_form.pincode}}
+            </div>
+
+
+            <div class="form-controls btn-al-right space-between">
+                <button class="btn-block-control" id="block-btn-previous-3">Previous</button>
+                <button class="btn-block-control" id="block-btn-next-3">Next</button>
+
+            </div>
+        </div>
+
+        <div class="signup-block-4 block" id="signup-block-4">
+
+            <div class="form-controls">
+                <label>{{rest_form.name.label}} </label>
+                {{rest_form.name}}
+            </div>
+            <div class="form-controls">
+                <label>Image</label>
+                {{rest_form.image}}
+            </div>
+
+
+
+            <div class="form-controls btn-al-right space-between">
+                <button class="btn-block-control" id="block-btn-previous-4">Previous</button>
+                <input type="submit" class="btn-block-control" id="block-btn-submit" value="Create restaurant">
+            </div>
+        </div>
+        
+
+       
+
+    </form>
+</main>
+
+
+<script>
+    $(document).ready(function () {
+
+       
+        $("input[name=cpassword]").mouseout(function () {
+            const password = $("input[name=password]").val();
+            if (password == $(this).val()) {
+                deactivateNotification()
+                $("#block-btn-submit").removeClass("btn-disabled-second")
+            } else {
+                activateNotification("error", "Passwords don't match!")
+                $("#block-btn-submit").addClass("btn-disabled-second")
+            }
+        })
+
+        $("input[name=email]").mouseout(function () {
+            const email = $(this).val();
+            if (isEmail(email)) {
+                deactivateNotification()
+                $("#block-btn-next-1").removeClass("btn-disabled-second")
+
+                $.ajax({
+                    url: "",
+                    type: "GET",
+                    data: { email },
+                    success: (data) => {
+                        if (data.isEmailExists) {
+                            activateNotification("error", "Email aready Exists!")
+                            $("#block-btn-next-1").addClass("btn-disabled-second")
+                        } else {
+                            deactivateNotification();
+                            $("#block-btn-next-1").removeClass("btn-disabled-second")
+                        }
+                    }
+                })
+            } else {
+                $("#block-btn-next-1").addClass("btn-disabled-second")
+                activateNotification("error", "Email is not in proper format!")
+            }
+
+        })
+
+        function activateNotification(className, message) {
+            $("#noti-bar").removeClass("inactive-bar");
+            $("#noti-bar").addClass(className)
+            $("#noti-bar").text(message)
+        }
+
+        function deactivateNotification() {
+            $("#noti-bar").addClass("inactive-bar");
+        }
+
+        function isEmail(email) {
+            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            return regex.test(email);
+        }
+
+        $("#block-btn-next-1").click(function (e) {
+            e.preventDefault();
+
+            if ($("input[name=first_name]").val() == "") {
+                activateNotification("error", "First name can't be blank");
+            } else if ($("input[name=last_name]").val() == "") {
+                activateNotification("error", "Last name can't be blank");
+            } else if ($("input[name=email]").val() == "") {
+                activateNotification("error", "E-mail can't be blank");
+            } else {
+                $("#signup-block-1").removeClass("active-block")
+                $("#signup-block-2").addClass("active-block")
+            }
+
+        })
+
+        $("#block-btn-next-2").click(function (e) {
+            e.preventDefault();
+            $("#signup-block-2").removeClass("active-block")
+            $("#signup-block-3").addClass("active-block")
+        })
+
+        $("#block-btn-next-3").click(function (e) {
+            e.preventDefault();
+            $("#signup-block-3").removeClass("active-block")
+            $("#signup-block-4").addClass("active-block")
+        })
+
+        // $("#block-btn-submit").click(function(e) {
+        //     e.preventDefault();
+            
+        //     if ($("input[name=password]").val() == "") {
+        //         activateNotification("error", "Password can't be blank");
+        //     } else if ($("input[name=cpassword]").val() == "") {
+        //         activateNotification("error", " Confirm your password");
+        //     } else if ($("input[name=phone]").val() == "") {
+        //         activateNotification("error", "Phone can't be blank");
+        //     } else {
+        //         const formElem = document.querySelector("#signup-form")
+        //         const formData = new FormData(formElem)
+        //         formData.append("hi", "hello")
+        //         console.log(formData)
+        //     }
+        // })
+
+        // $("#block-btn-next-2").click(function (e) {
+           
+        // })
+
+        $("#block-btn-previous-2").click(function (e) {
+            e.preventDefault();
+            $("#signup-block-2").removeClass("active-block")
+            $("#signup-block-1").addClass("active-block")           
+        })
+
+        $("#block-btn-previous-3").click(function (e) {
+            e.preventDefault();
+            $("#signup-block-3").removeClass("active-block")
+            $("#signup-block-2").addClass("active-block")
+        })
+
+        $("#block-btn-previous-4").click(function (e) {
+            e.preventDefault();
+            $("#signup-block-4").removeClass("active-block")
+            $("#signup-block-3").addClass("active-block")
+        })
+
+        $("input[name=phone]").mouseout(function() {
+            if ($(this).val().length != 10) {
+                activateNotification("error", "Phone must be 10 digits long")
+                $("#block-btn-submit").addClass("btn-disabled-second")
+            } else {
+                deactivateNotification();
+                $("#block-btn-submit").removeClass("btn-disabled-second")
+            }
+        })
+
+    })
+
+
+</script>
+
+<!-- Signup page ends -->
+
+{% endblock content %}

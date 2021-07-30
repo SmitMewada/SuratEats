@@ -1,0 +1,50 @@
+{% extends 'client/base.html' %}
+{% load static %}
+{% load customFilters %}
+
+{% block content %}
+
+<!-- Dish details page starts -->
+
+
+
+  
+
+
+    <main class="dish-details-page">
+        <div class="dish-details">
+            <div class="dish-body">
+                <div class="dish">
+                    <img src={{dish.image.url}} alt="">
+                    <h2>Dora cake</h2>
+                </div>
+
+                <div class="dish-details_details">
+                    <h2>Price: <span class="price">{{dish.price|currency}}</span></h2>
+                    <h2>Restaurant: <span class="restaurant">{{dish.restaurant.name}}</span></h2>
+                    <h2>Category: <span class="restaurant">{{dish.category.category}}</span></h2>
+                    <p class="paragraph">{{dish.description}}</p>
+                </div>
+            </div>
+
+            <div class="ratings-section">
+                <ul>
+                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
+                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
+                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
+                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
+                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="other-dishes">
+
+        </div>
+    </main>
+
+
+
+
+<!-- Dish details page ends -->
+{% endblock content %}

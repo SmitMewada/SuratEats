@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% load customFilters %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>Invoice</title>
+    <style>
+
+        * {
+            font-family: 'poppins', serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .logo h1{
+            color: orange;
+            font-weight: 500;
+        }
+        .logo h1 span {
+            color: black;
+        }
+                
+        .invoice-header {
+            padding: 1.5rem 25rem;
+        }
+        
+        .invoice-container {
+            padding: 0 25rem;
+        }
+        .rest-invoice {
+            padding-top: 1rem;
+        }
+        
+        .rest-invoice p {
+            color: #9d9d9e;
+            font-size: 0.7rem;
+        }
+        .rest-invoice h4 span {
+            color: orange;
+        }
+        
+        .dish-list {
+            padding-top: 0.7rem;
+        }
+        
+        .dish-list h4 {
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+        
+        .dish-list .invoice-qty h4:last-child {
+            font-weight: bold;
+        }
+        
+        .invoice-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+        
+        .invoice-total h4:last-child {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        
+        .invoice-dish {
+            border-bottom: 1px solid #9d9d9e;
+            padding: 0.5rem 0;
+        }
+        .invoice-qty {
+            display: flex;
+            justify-content: space-between;
+        }
+        .cust-delivery-details {
+            margin: 1rem 0;
+        }
+        
+        .cust-delivery-details p {
+            color: #9d9d9e;
+            font-size: 0.7rem;
+        }
+        
+        
+        
+            </style>
+</head>
+
+<body>
+    <header class="invoice-header">
+        <div class="logo">
+            <h1>Surat<span>Eats</span></h1>
+        </div>
+    </header>
+
+   
+
+    <div class="invoice-container">
+        <div class="cust-delivery-details">
+            <h4>Delivery details</h4>
+            <h5>Mr/Ms <span>{{transaction.customer.first_name|upper}}  {{transaction.customer.last_name|upper}}</span></h5>
+            <p>{{transaction.address}} <br>
+               {{transaction.phone}}</p>
+        </div>
+        <h2>Your orders</h2>
+       {% for restaurant in orders|get_restaurant_query_set %}
+         <section class="rest-invoice">
+            <h4>Your orders with <span>{{restaurant.name|upper}}</span></h4>
+            <p>{{restaurant.address}}</p>
+            <div class="dish-list">
+
+                {% for dish in orders|get_dishes_from_restaurant:restaurant %}
+                <div class="invoice-dish">
+                    <h4 class="dish-name_invoice">{{dish.name}}</h4>
+                    <div class="invoice-qty">
+                        <h4>Quantity</h4>
+                        <h4>{{dish|get_qty_from_order:orders}}</h4>
+                    </div>
+                    <div class="invoice-qty">
+                        <h4>Price</h4>
+                        <h4>${{dish.price}}</h4>
+                    </div>
+                    <div class="invoice-qty">
+                        <h4>Subtotal</h4>
+                        <h4>${{dish|subtotal_for_orders_rest_wise:orders}}</h4>
+                    </div>
+                </div>
+            {% endfor %}
+
+            </div>
+        </section>
+       {% endfor %}
+
+        <sectiom class="invoice-total">
+            <h4>Grand total</h4>
+            <h4>${{orders|get_grandtotal_from_order}}</h4>
+        </sectiom>
+        
+    </div>
+</body>
+
+</html>

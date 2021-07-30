@@ -1,0 +1,278 @@
+{% extends 'client/base.html' %}
+
+{% load static %}
+{% load customFilters %}
+{% block content %}
+
+<body>
+    <!-- Login page starts -->
+
+    <main class="container rest-details-main">
+        <div class="rest-details-header">
+            <img src="{{rest.image.url}}" alt="" class="rest-main-img" />
+
+            <div class="nearby-section">
+                <h1 class="nearby-headline">Near by</h1>
+
+                
+                <div class="nearby">
+                    {% for nearby_rest in nearby_rests %}
+                    <a href={% url 'rest-details' nearby_rest.id %}>
+                        <div class="nearby-card">
+                            <img src="{{nearby_rest.image.url}}" alt="" />
+                            <div class="nearby-card-body">
+                                <h2>{{nearby_rest.name}}</h2>
+                                <h3 class="ratings">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </h3>
+                                <p class="nearby-para">
+                                   {{nearby_rest.address}}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="rest-details-body">
+            <h1 class="rest-details-headline">{{rest.name}}</h1>
+            <h3 class="ratings">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="far fa-star"></i>
+            </h3>
+            <p class="rest-details-para">
+                {{rest.address}} <br>
+                +91-{{rest.customer.phone}}
+            </p>
+            <h2 class="rest-details-area">Vesu</h2>
+        </div>
+
+        <section class="rest-dishes-section">
+            <div class="rest-filters">
+                <div class="custom-select">
+                    <span class="selected-value">Select category</span>
+                    <i class="fas fa-angle-down"></i>
+
+                    <div class="dropdown">
+                        <ul>
+                            {% for category in categories %}
+                            <li data={{category.category}} item-value={{category.id}} class="dropdown-item">
+                                {{category.category}}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rest-dishes" id="rest-dishes">
+                {% for dish in dishes %}
+                <div class="rest-dish-card" id={{dish.id}}>
+                    <img src="{{dish.image.url}}" alt="" />
+                    <div class="rest-dish-body">
+                        <h3>{{dish.name}}</h3>
+                        <h2 class="ratings sm-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </h2>
+                        <div class="dish-actions">
+                            {% if dish|is_in_cart:request.session.cart %}
+                            <button class="btn rest-dish-btn btn-minus">-</button>
+                            <span class="qty-value">{{dish|get_qty_from_cart:request.session.cart}}</span>
+                            <button class="btn rest-dish-btn btn-plus">+</button>
+                            {% else %}
+                            <a href={% url 'dish-details' dish.id%} class="btn rest-dish-btn">View</a>
+
+                            <button class="btn rest-dish-btn mg-left-2 btn-add" id={{dish.id}}>Add</button>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+
+            </div>
+        </section>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+            $(document.body).on('click', '.btn-minus', function () {
+                const dish_id = $(this).parents('div.rest-dish-card').attr('id');
+                $.ajax({
+                    url: '',
+                    type: 'GET',
+                    data: {
+                        'dish_id': dish_id,
+                        'action': 'remove'
+                    },
+                    success: (data) => {
+                        setQty($(this), data);
+                    }
+                });
+
+
+            })
+
+            $(document.body).on('click', '.btn-plus', function () {
+                const dish_id = $(this).parents('div.rest-dish-card').attr('id');
+                $.ajax({
+                    url: '',
+                    type: 'GET',
+                    data: {
+                        'dish_id': dish_id,
+                        'action': 'add'
+                    },
+                    success: (data) => {
+                        setQty($(this), data);
+                    }
+                });
+
+            });
+
+            const setQty = (conext, data) => {
+                if (data.qty < 1) {
+                    const parent = conext.parents('div.dish-actions');
+                    parent.empty();
+                    parent.append(`
+                    <button class="btn rest-dish-btn">View</button>
+                    <button class="btn rest-dish-btn mg-left-2 btn-add" id={{dish.id}}>Add</button>
+                    `);
+                } else {
+                    conext.siblings('span.qty-value').text(data.qty);
+                }
+                $("#cartIndicator").text(data.item_count);
+
+            }
+
+
+            $(document.body).on('click', '.btn-add', function () {
+                const dish_id = $(this).parents('div.rest-dish-card').attr('id');
+                parent = $(this).parents('div.dish-actions');
+                $.ajax({
+                    url: '',
+                    type: 'GET',
+                    data: {
+                        'dish_id': dish_id,
+                        'action': 'add'
+                    },
+                    success: (data) => {
+                        $("#cartIndicator").text(data.item_count)
+                        parent.empty();
+                        parent.append(`
+                          <button class="btn rest-dish-btn btn-minus">-</button>
+                          <span class="qty-value">${data.qty}</span>
+                          <button class="btn rest-dish-btn btn-plus">+</button>
+                        `)
+
+
+                    }
+                });
+
+
+            });
+
+            $(".custom-select").click(function () {
+                const div = $(this).children("div.dropdown");
+                div.toggleClass("dropdown-active");
+            });
+
+            $(document.body).on('click', '.dropdown-item', function () {
+
+
+
+                const parent = $(this).parents("div.custom-select");
+
+                const span = parent.children("span");
+                span.text($(this).attr("data"));
+                parent.attr("item-value", $(this).attr("item-value"));
+                const context = $(this)
+
+                $.ajax({
+                    url: "",
+                    type: "GET",
+                    data: {
+                        "category_id": $(this).attr("item-value")
+                    },
+                    success: (data) => {
+
+                        $('#rest-dishes').html("");
+                        return $.map(data, (dish) => {
+                            $("#rest-dishes").append(`
+                                    <div class="rest-dish-card" id="${dish.pk}">
+                                        <img src="/images/download/${dish.fields.image}" alt="" />
+                                        <div class="rest-dish-body">
+                                            <h3>${dish.fields.name}</h3>
+                                            <h2 class="ratings sm-stars">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="far fa-star"></i>
+                                            </h2>
+                                            <div class="dish-actions">
+                                                
+                                            </div>
+                                        </div>
+                                </div>
+                              `)
+
+                            $.ajax({
+                                url: '',
+                                type: 'GET',
+                                data: {
+                                    'dish_id': dish.pk,
+                                    'action': 'check_cart'
+                                },
+                                success: (data) => {
+                                    const dishAction = context.parents('div.rest-filters').siblings('#rest-dishes').find('div.dish-actions')
+
+                                    dishAction.empty();
+                                    console.log(`${dish.pk} : ${data.isInCart}`)
+                                    if (data.isInCart) {
+                                        dishAction.append(`
+                                            <button class="btn rest-dish-btn btn-minus">-</button>
+                                            <span class="qty-value"></span>
+                                            <button class="btn rest-dish-btn btn-plus">+</button>
+                                       `)
+                                        dishAction.children('.qty-value').text(data.qty)
+
+                                    } else {
+                                        dishAction.append(`
+                                            <button class="btn rest-dish-btn">View</button>
+
+                                            <button class="btn rest-dish-btn mg-left-2 btn-add" id=${dish.pk}>Add</button>
+                                       `)
+                                    }
+
+                                }
+                            });
+
+
+                        })
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    {% endblock content %}
+</body>
+
+</html>

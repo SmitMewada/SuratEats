@@ -1,0 +1,111 @@
+{% extends 'client/base.html' %}
+{% load static %}
+{% load customFilters %}
+
+{% block content %}
+
+    <!-- Restaurants starts -->
+
+
+    <main class="restaurants-main">
+
+        <section class="rest-area-section">
+            <div class="area-rest-textbox">
+                <h1>
+                    {% if request|has_area %}
+                        Restaurants near <span class="area">{{area.area}}</span>
+                    {% else %}
+                        All <span class="area">Restaurants</span>
+                    {% endif %}
+                </h1>
+            </div>
+
+            <form action="" class="form search-form rest-search-form">
+                <input type="text" placeholder="Search" id="search-bar" autocomplete="off">
+                <button type="submit" id="search-btn"><i class="fas fa-search"></i></button>
+
+                <div class="suggestions" id="suggestions">
+
+                </div>
+            </form>
+
+        </section>
+
+        <section class="restaurant-cards container">
+
+        {% for rest in rests %}
+             <div class="restaurant-card">
+            
+                
+                <img src="{{rest.image.url}}" alt="">
+                
+                <div class="rest-card-body">
+                    <h2 class="card-title">{{rest.name}}</h2>
+                    <h2 class="ratings">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </h2>
+                    <div class="para-btn">
+                        <p class="card-para">
+                            {{rest.address}}
+                        </p>
+                        <a href={% url 'rest-details' rest.id %} class="btn btn-view">View</a>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+
+        </section>
+
+
+
+    </main>
+
+    <!-- Restaurants ends -->
+
+      <script>
+            $(document).ready(function() {
+
+                $("#search-btn").click(function(e) {
+                    e.preventDefault()
+                    const areaID = $("#search-bar").attr("area-id")
+                    location.replace(`/restaurants?area-id=${areaID}`)
+                })
+
+                $(document.body).on('click', '.area-item', function(e) {
+                    e.preventDefault()
+                    const areaID = $(this).attr("id")
+                    $("#search-bar").attr("area-id", areaID)
+                    $("#search-bar").val($(this).text())
+                    $("#suggestions").html("")
+                })
+
+                $("#search-bar").keyup(function() {
+                    const value = $(this).val();
+                    const suggestionBox = $("#suggestions")
+
+                    $.ajax({
+                        url: "/get-areas",
+                        type: "GET",
+                        data: {value},
+                        success: (data) => {
+                            suggestionBox.html("")
+                            data.forEach(element => {
+                                suggestionBox.append(`
+                                    <a href="" class="area-item" id="${element.pk}"> ${element.fields.area}</a>
+                                `)
+                            });
+                        }
+                    })
+                })
+
+               
+            })
+        </script>
+
+
+    {% endblock content %}

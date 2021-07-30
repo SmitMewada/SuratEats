@@ -1,0 +1,83 @@
+{% extends 'restaurant/base.html' %}
+{% load restFilters %}
+
+{% block content %}
+
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+    </div>
+
+    <div class="table-container">
+        <table class="table dish-table">
+            <thead>
+                <tr>
+                    <th>Dish</th>
+                    <th>Price</th>
+                    <th>quantity</th>
+                    <th>total</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for order in orders %}
+
+                <tr id={{order.id}}>
+                    <td>{{order.dish.name}}</td>
+                    <td>{{order.price|currency}}</td>
+                    <td>{{order.qty}}</td>
+                    <td>{{order|calculate_total|currency}}</td>
+                    <td>{{order.address}}</td>
+                    <td>
+                        <div class="actions">
+                            <i class="btn-icon"><input type="checkbox" class="btn-icon btn-action"></i>
+                        </div>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-action").click(function () {
+            const orderID = $(this).parents("tr").attr("id")
+
+            if ($(this).prop("checked")) {
+                $.ajax({
+                    url: "",
+                    type: "GET",
+                    data: {
+                        orderID, 
+                        "action": "check"
+                    },
+                    success: (data) => {
+                        
+                    }
+                })
+            } else {
+                $.ajax({
+                    url: "",
+                    type: "GET",
+                    data: {
+                        orderID, 
+                        "action": "uncheck"
+                    },
+                    success: (data) => {
+                        
+                    }
+                })
+            }
+        })
+    })
+</script>
+
+{% endblock content %}

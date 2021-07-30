@@ -1,0 +1,162 @@
+{% extends 'client/base.html' %}
+{% load static %}
+{% load customFilters %}
+
+{% block content %}
+
+<!-- Cart page starts -->
+
+<main class="container cart-page">
+    
+    <section class="cart-cards">
+
+        {% if isCartEmpty %}
+        <h1> Cart is empty! </h1>
+        {% else %}
+        <h1 class="order-headline">Your cart</h1>
+        {% for dish in dishes %}
+        
+            <div class="cart-card" id={{dish.id}}>
+                <div class="cart-card-image">
+                    <img src={{dish.image.url}} alt="">
+                    <div class="cart-dish-body">
+                        <h3>{{dish.name}}</h3>
+    
+                        <div class="dish-actions-qty">
+                            <button class="btn rest-dish-btn pad-zero btn-minus">-</button>
+                            <span class="qty-value">{{dish|get_qty_from_cart:request.session.cart}}</span>
+                            <button class="btn rest-dish-btn pad-zero btn-plus">+</button>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="cart-card-body">
+                    <h3>Quantity: <span
+                            class="cart-item-qty font-large">{{dish|get_qty_from_cart:request.session.cart}}</span></h3>
+                    <h3>Restaurant: <span class="font-large">{{dish.restaurant.name}}</span></h3>
+                    <h3>Price: <span class="price font-large">${{dish.price|currency}}</span></h3>
+                    <h3>Sub-total: <span
+                            class="price font-large">{{dish|calculate_subtotal:request.session.cart|currency}}</span></h3>
+                    <a href="" class=" btn btn-remove">Remove</a>
+                </div>
+            </div>
+        
+        {% endfor %}
+        {% endif %}
+
+
+
+
+    </section>
+
+    <section class="cart-summary">
+        <div class="summary-row">
+            <h4>Total items</h4>
+            <h3 id="total-items">{{request.session.cart|set_cart_indicator}}</h3>
+        </div>
+        <div class="summary-row">
+            <h4>Total Price</h4>
+            <h3 class="price" id="grand-total">{{request.session.cart|calculate_grandtotal|currency}}</h3>
+        </div>
+        <div class="summary-row">
+            <h4>Delivery charge</h4>
+            <h3>$0</h3>
+        </div>
+
+        <div class="summary-btn">
+            <a href={% url 'order-essen' %}
+                class="btn btn-summary btn-block {% if request.session.cart|set_cart_indicator == 0%}disabled{% endif %}"
+                id="btn-checkout">Proceed checkout</a>
+        </div>
+    </section>
+</main>
+
+<script>
+    $(document).ready(function () {
+        $(document.body).on('click', '.btn-remove', function (e) {
+            e.preventDefault();
+            const dish_id = $(this).parents('div.cart-card').attr('id');
+
+            $.ajax({
+                url: '',
+                type: 'GET',
+                data: {
+                    'dish_id': dish_id,
+                    'action': 'pop'
+                },
+                success: (data) => {
+                    if (data.success) {
+                        const parent = $(this).parents('div.cart-card');
+                        parent.remove()
+                        $("#cartIndicator").text(data.count);
+                        if (data.count < 1) {
+                            $('#btn-checkout').addClass("disbaled")
+                        }
+                    }
+
+                }
+            });
+
+        });
+
+        $(document.body).on('click', '.btn-minus', function () {
+            const dish_id = $(this).parents('div.cart-card').attr('id');
+            $.ajax({
+                url: '/restaurant/' + dish_id,
+                type: 'GET',
+                data: {
+                    'dish_id': dish_id,
+                    'action': 'remove'
+                },
+                success: (data) => {
+                    setQty($(this), data);
+                }
+            });
+
+
+        })
+
+        $(document.body).on('click', '.btn-plus', function () {
+            const dish_id = $(this).parents('div.cart-card').attr('id');
+            $.ajax({
+                url: '/restaurant/' + dish_id,
+                type: 'GET',
+                data: {
+                    'dish_id': dish_id,
+                    'action': 'add'
+                },
+                success: (data) => {
+                    setQty($(this), data);
+                }
+            });
+
+        });
+
+        const setQty = (conext, data) => {
+
+            if (data.item_count == 0) {
+                const mainParent = conext.parents('section.cart-cards');
+                console.log(mainParent)
+
+                mainParent.html("<h1> Cart is empty </h1>");
+                $("#btn-checkout").addClass('disabled');
+
+
+            } else {
+                if (data.qty < 1) {
+                    const parent = conext.parents('div.cart-card');
+                    parent.remove()
+                } else {
+                    conext.siblings('span.qty-value').text(data.qty);
+                }
+
+            }
+            $('#grand-total').text(data.grand_total)
+            $("#cartIndicator").text(data.item_count);
+            $('#total-items').text(data.item_count)
+        }
+    })
+</script>
+
+<!-- Cart page ends -->
+{% endblock content %}

@@ -1,0 +1,206 @@
+{% extends 'client/base.html' %} {% load static %} {% block content %}
+
+<!-- Hero Starts -->
+<section class="hero-section container">
+    <img src="{% static 'images/coffee.png' %}" alt="" class="coffee-img" />
+    <div class="hero-textbox">
+        <h1>
+            Surat's First Online <br />
+            Food Delivery System
+        </h1>
+
+        <p class="main-paragraph">
+            Order all the famous dishes of surat from any area of surat. Get your food
+            at your door step.
+        </p>
+
+        <form action="" class="form search-form" autocomplete="off">
+            <input type="text" placeholder="Search" id="search-bar" />
+            <button type="submit" id="search-btn">Find food</button>
+            <div class="suggestions per-sug-width" id="suggestions"></div>
+        </form>
+    </div>
+
+    <div class="curve">
+        <img src="{% static 'images/1.png' %}" alt="" class="hero-img-1" />
+        <img src="{% static 'images/2.png' %}" alt="" class="hero-img-2" />
+        <div class="curve-2"></div>
+    </div>
+</section>
+<!-- Hero Ends -->
+
+<!-- Area Section Starts -->
+
+<section class="area-section container">
+    <div class="area-textbox animate-right">
+        <h1 class="headline"><span>L</span>ocal Dishes</h1>
+        <p class="area-paragraph">
+            Order all your favorite famous dishes from local restaurants around and
+            get it at your doorstep.
+        </p>
+        <a href="#" class="btn explore">Explore</a>
+    </div>
+
+    <div class="image-container m-6 animate-left">
+        <div class="img-1"></div>
+        <div class="img-2"></div>
+    </div>
+</section>
+
+<!-- Area Section Ends -->
+
+<!-- Exotic banner starts -->
+<section class="exotic-banner container">
+    <div class="exotic-banner-textbox">
+        <h1><span>E</span>xotic</h1>
+        <h3>Restaurants</h3>
+    </div>
+</section>
+<!-- Exotic banner starts -->
+
+<!-- Exotic Dishes starts -->
+<section class="exotic-dishes-section container">
+    <div class="exotic-card animate-top">
+        <div class="card-img-container">
+            <img src="{% static 'images/111.png' %}" alt="" />
+        </div>
+        <div class="exotic-card-body">
+            <h2>Kyoto's Sushi</h2>
+            <p>Get the best taste of the sushi with desired flavours</p>
+            <a href="" class="btn btn-card">View</a>
+        </div>
+    </div>
+
+    <div class="exotic-card animate-bottom">
+        <div class="card-img-container">
+            <img src="{% static 'images/222.png' %}" alt="" />
+        </div>
+        <div class="exotic-card-body">
+            <h2>Floridian's Fish</h2>
+            <p>Get the best taste of the sushi with desired flavours</p>
+            <a href="" class="btn btn-card">View</a>
+        </div>
+    </div>
+
+    <div class="exotic-card animate-top">
+        <div class="card-img-container">
+            <img src="{% static 'images/333.png' %}" alt="" />
+        </div>
+        <div class="exotic-card-body">
+            <h2>Chinese Shushi</h2>
+            <p>Get the best taste of the sushi with desired flavours</p>
+            <a href="" class="btn btn-card">View</a>
+        </div>
+    </div>
+</section>
+<!-- Exotic Dishes Ends -->
+
+<!-- Service section starts -->
+
+<section class="service-section container">
+    <div class="customer-support animate-right">
+        <img src={% static 'images/support.png' %} alt="">
+        <div class="customer-textbox">
+            <h1>
+                <span>24 Hours</span> <br />
+                Customer support
+            </h1>
+        </div>
+    </div>
+
+    <div class="delivery-guy animate-left">
+        <img src={% static 'images/delivery-man.png' %} alt="">
+        <div class="customer-textbox m-left">
+            <h1>
+                <span>30 Minutes</span> <br />
+                Speed delivery
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- Service section ends -->
+
+<!-- restaurant banner section starts -->
+
+<section class="rest-banner-section container">
+    <div class="rest-banner-textbox">
+        <h1 class="animate-bottom">Own a restaurant?</h1>
+        <h3>List your restaurant on our platform</h3>
+        <a href="" class="btn btn-learnmore animate-top">Learn more</a>
+    </div>
+</section>
+<!-- restaurant banner section ends -->
+
+<script>
+    window.sr = ScrollReveal();
+
+    sr.reveal(".animate-left", {
+        origin: "left",
+        duration: 1000,
+        distance: "25rem",
+        delay: 300,
+    });
+
+    sr.reveal(".animate-right", {
+        origin: "right",
+        duration: 1000,
+        distance: "25rem",
+        delay: 300,
+    });
+
+    sr.reveal('.animate-top', {
+        origin: 'top',
+        duration: 1000,
+        distance: '25rem',
+        delay: 600
+    });
+
+    sr.reveal('.animate-bottom', {
+        origin: 'bottom',
+        duration: 1000,
+        distance: '25rem',
+        delay: 600
+    });
+
+    $(document).ready(function () {
+        $("#search-btn").click(function (e) {
+            e.preventDefault();
+            const areaID = $("#search-bar").attr("area-id");
+            location.replace(`/restaurants?area-id=${areaID}`);
+        });
+
+        $(document.body).on("click", ".area-item", function (e) {
+            e.preventDefault();
+            const areaID = $(this).attr("id");
+            $("#search-bar").attr("area-id", areaID);
+            $("#search-bar").val($(this).text());
+            $("#suggestions").html("");
+        });
+
+        $("#search-bar").keyup(function () {
+            const value = $(this).val();
+            const suggestionBox = $("#suggestions");
+
+            $.ajax({
+                url: "/get-areas",
+                type: "GET",
+                data: { value },
+                success: (data) => {
+                    suggestionBox.html("");
+                    data.forEach((element) => {
+                        suggestionBox.append(`
+                                    <a href="" class="area-item" id=${element.pk}> ${element.fields.area}</a>
+                                `);
+                    });
+                },
+            });
+        });
+
+        $(".search-form").mouseleave(function () {
+            $("#suggestions").html("");
+        });
+    });
+</script>
+
+{% endblock content %}
