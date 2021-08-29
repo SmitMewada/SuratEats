@@ -1,0 +1,47 @@
+{% extends 'administrator/base.html' %} {% block content %}
+<div class="dashboard">
+    <div class="dashboard-headline-section">
+        <h1 class="headline">{{page_name}}</h1>
+
+    </div>
+    <div class="dash-cards cards-align-center">
+        <div class="dash-card tax-card">
+            <span class="dash-card-header tax-title"><i class="fas fa-pizza-slice green"></i>Current Rate</span>
+            <h2 class="dash-card-value">{{tax_message}}</h2>
+        </div>
+    </div>
+
+    <div class="taxform">
+        <form action="">
+            <div class="form-controls">
+                <input type="text" placeholder="Enter tax rate" class="form-input" id="tax-rate">
+            </div>
+            <button type="button" class="btn-tax" id="btn-tax">Update</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#btn-tax").click(function(e) {
+            e.preventDefault();
+
+            const taxRate = $("#tax-rate").val()
+
+            $.ajax({
+                url: "",
+                type: "GET",
+                data: {
+                    tax_rate: taxRate,
+                    "update_tax": "update_tax"
+                },
+                success: (data) => {
+                    if (data.success) location.reload();
+                    else alert("Tax can't be updated at this moment!")
+                }
+            });
+
+        });
+    });
+</script>
+{% endblock content %}

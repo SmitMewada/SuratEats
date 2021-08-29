@@ -1,0 +1,100 @@
+{% extends 'client/base.html' %}
+{% load static %}
+{% load customFilters %}
+
+{% block content %}
+
+<!-- Dish details page starts -->
+
+<main class="dish-details-page">
+    <div class="dish-details">
+        <div class="dish-body">
+            <div class="dish">
+                <img src={{dish.image.url}} alt="">
+                <h2>{{dish.name}}</h2>
+            </div>
+
+            <div class="dish-details_details">
+                <h2>Price: <span class="price">{{dish.price|currency}}</span></h2>
+                <h2>Restaurant: <span class="restaurant">{{dish.restaurant.name}}</span></h2>
+                <h2>Category: <span class="restaurant">{{dish.category.category}}</span></h2>
+                <p class="paragraph">{{dish.description}}</p>
+            </div>
+        </div>
+
+        <div class="ratings-section">
+            <ul id="dish" dishID={{dish.id}} isRated={{isRated}}>
+                {{rating}}
+
+                <li><i class={% if rating|rating1 %}"fas fa-star star yellow"{% else %}"fas fa-star star"{% endif %} id="s1"
+                        clicked="false"></i></li>
+                <li><i class={% if rating|rating2 %}"fas fa-star star yellow"{% else %}"fas fa-star star"{% endif %} id="s2"
+                        clicked="false"></i></li>
+                <li><i class={% if rating|rating3 %}"fas fa-star star yellow"{% else %}"fas fa-star star"{% endif %} id="s3"
+                        clicked="false"></i></li>
+                <li><i class={% if rating|rating4 %}"fas fa-star star yellow"{% else %}"fas fa-star star"{% endif %} id="s4"
+                        clicked="false"></i></li>
+                <li><i class={% if rating|rating5 %}"fas fa-star star yellow"{% else %}"fas fa-star star"{% endif %} id="s5"
+                        clicked="false"></i></li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="other-dishes">
+
+    </div>
+</main>
+
+<script>
+    $(document).ready(function () {
+        
+        const isRated = $("#dish").attr("isRated") == "True";
+
+        if (!isRated) {
+            $(".star").mouseleave(function () {
+                isNotClicked = $(this).attr("clicked") == "false";
+                if (isNotClicked) for (let i = 0; i < 5; i++) $(`#s${i + 1}`).removeClass("yellow")
+            })
+
+            $(".star").mouseover(function () {
+                isNotClicked = $(this).attr("clicked") == "false";
+                const starPos = parseInt($(this).attr("id")[1]);
+
+                if (isNotClicked) for (let i = 0; i < 5; i++) i < starPos ? $(`#s${i + 1}`).addClass("yellow") : $(`#s${i + 1}`).removeClass("yellow")
+            })
+
+            $(".star").click(function () {
+                const starPos = parseInt($(this).attr("id")[1]);
+                const dishID = $("#dish").attr("dishID")
+
+                for (let i = 0; i < 5; i++) $(`#s${i + 1}`).removeClass("yellow");
+
+                for (let i = 0; i < starPos; i++) {
+                    i < starPos ? $(`#s${i + 1}`).addClass("yellow") : $(`#s${i + 1}`).removeClass("yellow");
+                    $(`#s${i + 1}`).attr("clicked", true);
+                }
+
+                $.ajax({
+                    url: "",
+                    type: "GET",
+                    data: {
+                        no_of_stars: starPos,
+                        dish_id: dishID
+                    },
+                    success: (data) => {
+                        console.log(data)
+                    }
+                })
+            })
+        }
+
+
+    })
+</script>
+
+
+
+
+<!-- Dish details page ends -->
+{% endblock content %}

@@ -435,3 +435,55 @@ a.active i {
     height: 30rem;
     width: 52.5rem;
 }
+
+
+/****** Admin *******/
+
+.cards-align-center {
+    display: flex;
+    justify-content: center;
+}
+
+.tax-card {
+    width: 30rem;
+    height: 15rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tax-title {
+    font-size: 2rem;
+}
+
+.taxform {
+    width: 100%;
+    height: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.taxform form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 30rem;
+}
+
+.taxform form input {
+    width: 30rem;
+}
+
+.btn-tax {
+    padding: 0.7rem 1rem;
+    margin-top: 1rem;
+    width: 100%;
+    outline: none;
+    color: #fff;
+    background-color: var(--secondary-color);
+    border: none;
+    cursor: pointer;
+}

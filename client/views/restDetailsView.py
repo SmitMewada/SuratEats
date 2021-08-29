@@ -18,9 +18,7 @@ class RestDetailsView(View):
         
 
         if action:
-
             if action == "check_cart":
-                print('######', cart.get(dish_id))
                 return JsonResponse({
                     "isInCart": isInCart(request.session.get('cart'), dish_id),
                     "qty": cart.get(dish_id)
@@ -47,6 +45,7 @@ class RestDetailsView(View):
            
             
             return JsonResponse({
+                'dishID': dish_id,
                 'qty': cart.get(dish_id),
                 'item_count': get_item_count_from_cart(request),
                 "grand_total":  f"₹{calc_grand_total(request.session.get('cart'))}"

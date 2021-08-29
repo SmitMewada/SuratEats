@@ -14,6 +14,7 @@
                 <tr>
                     <th>Dish</th>
                     <th>Price</th>
+                    <th>Date</th>
                     <th>quantity</th>
                     <th>total</th>
                     <th>Address</th>
@@ -27,6 +28,7 @@
                 <tr id={{order.id}}>
                     <td>{{order.dish.name}}</td>
                     <td>{{order.price|currency}}</td>
+                    <td>{{order.order_date}}</td>
                     <td>{{order.qty}}</td>
                     <td>{{order|calculate_total|currency}}</td>
                     <td>{{order.address}}</td>

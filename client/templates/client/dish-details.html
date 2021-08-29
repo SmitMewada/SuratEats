@@ -6,42 +6,162 @@
 
 <!-- Dish details page starts -->
 
+<main class="dish-details-page">
+    <div class="dish-details" id={{dish.id}}>
+        <div class="dish-body">
+            <div class="dish">
+                <img src={{dish.image.url}} alt="">
+                <h2>{{dish.name}}</h2>
 
-
-  
-
-
-    <main class="dish-details-page">
-        <div class="dish-details">
-            <div class="dish-body">
-                <div class="dish">
-                    <img src={{dish.image.url}} alt="">
-                    <h2>Dora cake</h2>
-                </div>
-
-                <div class="dish-details_details">
-                    <h2>Price: <span class="price">{{dish.price|currency}}</span></h2>
-                    <h2>Restaurant: <span class="restaurant">{{dish.restaurant.name}}</span></h2>
-                    <h2>Category: <span class="restaurant">{{dish.category.category}}</span></h2>
-                    <p class="paragraph">{{dish.description}}</p>
-                </div>
             </div>
 
-            <div class="ratings-section">
-                <ul>
-                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
-                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
-                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
-                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
-                    <li><a href="" class="rating-a"><i class="far fa-star"></i></a></li>
-                </ul>
+            <div class="dish-details_details">
+                <h2>Price:<span class="price">{{dish.price|currency}}</span></h2>
+                <h2>Restaurant: <span class="restaurant">{{dish.restaurant.name}}</span></h2>
+                <h2>Category: <span class="restaurant">{{dish.category.category}}</span></h2>
+                <p class="paragraph">{{dish.description}}</p>
+
+                <div class="dish-actionss">
+
+                    {% if dish|is_in_cart:request.session.cart %}
+                    <button class="btn btn-dish-add btn-minus">-</button>
+                    <span class="qty-value secondary">{{dish|get_qty_from_cart:request.session.cart}}</span>
+                    <button class="btn btn-dish-add btn-plus">+</button>
+                    {% else %}
+                    <button class="btn btn-dish-add btn-add" id="add-btn">Add</button>
+                    {% endif %}
+
+
+                </div>
             </div>
         </div>
 
-        <div class="other-dishes">
+        <div class="ratings-section">
+            <ul>
+                {% for condition in dish|rate_dish|get_conditions %}
+                {% if condition == 1 %}
+                <li><i class="fa fa-star yellow"></i></li>
+                {% elif condition == 2%}
+                <li> <i class="fas fa-star-half yellow"></i></li>
+                {% else %}
+                <li><i class="fa fa-star grey"></i></li>
+                {% endif %}
 
+                {% endfor %}
+            </ul>
         </div>
-    </main>
+    </div>
+
+    <div class="other-dishes">
+
+        {% for dish in other_dishes %}
+        <a href={% url 'dish-details' dish.id %}>
+            <div class="nearby-card">
+                <img src="{{dish.image.url}}" alt="" />
+                <div class="nearby-card-body">
+                    <h2>{{dish.name}}</h2>
+                    <h3 class="ratings">
+                        {% for condition in dish|rate_dish|get_conditions %}
+                        {% if condition == 1 %}
+                        <i class="fa fa-star yellow"></i>
+                        {% elif condition == 2%}
+                        <i class="fas fa-star-half yellow"></i>
+                        {% else %}
+                        <i class="fa fa-star grey"></i>
+                        {% endif %}
+
+                        {% endfor %}
+                    </h3>
+                    <p class="nearby-para">
+                        {{dish.description}}
+                    </p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+
+
+
+    </div>
+</main>
+
+<script>
+    $(document).ready(function () {
+
+        $(document.body).on("click", ".btn-minus", function () {
+            const dish_id = $(this).parents('div.dish-details').attr('id');
+            $.ajax({
+                url: '/restaurant/'+dish_id,
+                type: 'GET',
+                data: {
+                    'dish_id': dish_id,
+                    'action': 'remove'
+                },
+                success: (data) => {
+                    setQty($(this), data);
+                }
+            });
+        });
+
+        $(document.body).on("click", ".btn-plus", function () {
+            const dish_id = $(this).parents('div.dish-details').attr('id');
+            $.ajax({
+                url: '/restaurant/'+dish_id,
+                type: 'GET',
+                data: {
+                    'dish_id': dish_id,
+                    'action': 'add'
+                },
+                success: (data) => {
+                    setQty($(this), data);
+                }
+            });
+        });
+
+        const setQty = (conext, data) => {
+            if (data.qty < 1) {
+                const parent = conext.parents('div.dish-actionss');
+                parent.empty();
+                parent.append(`
+                    <button class="btn btn-dish-add btn-add" id={{dish.id}}>Add</button>
+                    `);
+            } else {
+                conext.siblings('span.qty-value').text(data.qty);
+            }
+            $("#cartIndicator").text(data.item_count);
+
+        }
+
+        $(document.body).on("click", ".btn-add", function () {
+            const dish_id = $(this).parents('div.dish-details').attr('id');
+                parent = $(this).parents('div.dish-actionss');
+                $.ajax({
+                    url: '/restaurant/'+dish_id,
+                    type: 'GET',
+                    data: {
+                        'dish_id': dish_id,
+                        'action': 'add'
+                    },
+                    success: (data) => {
+                        $("#cartIndicator").text(data.item_count)
+                        parent.empty();
+                        parent.append(`
+                          <button class="btn btn-dish-add btn-minus">-</button>
+                          <span class="qty-value secondary">${data.qty}</span>
+                          <button class="btn btn-dish-add btn-plus">+</button>
+                        `)
+
+
+                    }
+                });
+        });
+
+
+
+    });
+
+
+</script>
 
 
 

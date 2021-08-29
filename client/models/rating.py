@@ -1,7 +1,8 @@
+from client.models.dish import Dish
 from django.db import models
-from client.models import Customer, Restaurant
+from client.models import Customer
 
 class Rating(models.Model):
-    rating = models.FloatField()
+    rating = models.FloatField(default=0.)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)

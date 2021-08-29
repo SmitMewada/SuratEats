@@ -1,3 +1,4 @@
+from administrator.views.taxView import TaxView
 from administrator.views.restBlockView import RestBlockView
 from administrator.views.PendingResquestsView import PendingRequestsView
 from administrator.views.adminRestsView import AdminRestView
@@ -11,5 +12,6 @@ urlpatterns = [
     path('customers/', AdminAuthMiddleware(CustomersView.as_view()), name="admin-custs"),
     path('restaurants/', AdminAuthMiddleware(AdminRestView.as_view()), name="admin-rests"),
     path('pending-request/', AdminAuthMiddleware(PendingRequestsView.as_view()), name="pending-requests"),
-    path('restaurant-blocked/', AdminAuthMiddleware(RestBlockView.as_view()), name="rest-blocked")
+    path('restaurant-blocked/', AdminAuthMiddleware(RestBlockView.as_view()), name="rest-blocked"),
+    path('tax/', AdminAuthMiddleware(TaxView.as_view()), name="tax")
 ]

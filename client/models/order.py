@@ -13,3 +13,5 @@ class Order(models.Model):
     phone = models.IntegerField()
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True)
+    tax_rate = models.IntegerField(default=15)
+    isPaid = models.BooleanField(default=False)

@@ -1,3 +1,5 @@
+from client.views.dishRatingView import DishRating
+from client.views.paymentView import PaymentsView
 from client.views.dishDetailsView import DishDetailsView
 from client.views.invoiceGenerator import render_invoice
 from client.views.getAreas import GetAreas
@@ -26,8 +28,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name="logout"),
     path('demo/', DemoView.as_view()),
     path("restaurant-signup/", RestSignupView.as_view(), name="rest-signup"),
-    path('orders/', OrdersView.as_view(), name="client-orders"),
+    path('orders/', AuthMiddleware(OrdersView.as_view()), name="client-orders"),
     path('get-areas/', GetAreas.as_view(), name="get-areas"),
     path('invoice/<int:id>', render_invoice, name="invoice"),
-    path('dish/<int:id>', ParameterizedMiddleware(DishDetailsView.as_view()), name="dish-details")
+    path('dish/<int:id>', ParameterizedMiddleware(DishDetailsView.as_view()), name="dish-details"),
+    path('payment/', PaymentsView.as_view(), name="payment"),
+    path('dish-rating/<int:id>', DishRating.as_view(),name="dish-rating")
 ]

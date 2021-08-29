@@ -1,3 +1,4 @@
+from client.models.tax import Tax
 import json
 from django.views import View
 from django.shortcuts import render
@@ -11,6 +12,7 @@ class IndexPanelView(View):
     def get(self, request):
         auth_creds = get_auth_creds(request)
         restaurant = Restaurant.objects.get(pk=auth_creds.get("restaurant_id"))
+        tax_rate = Tax.objects.get(pk=1)
         
         income_dataset = []
         order_dataset = []
@@ -56,5 +58,7 @@ class IndexPanelView(View):
             "income": total_income,
             "income_dataset": income_dataset,
             "order_dataset": order_dataset,
-            "page_name": "Dashboard"
+            "page_name": "Dashboard",
+            "tax_rate": tax_rate
+
         })

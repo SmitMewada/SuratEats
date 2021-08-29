@@ -14,7 +14,7 @@
             <div class="nearby-section">
                 <h1 class="nearby-headline">Near by</h1>
 
-                
+
                 <div class="nearby">
                     {% for nearby_rest in nearby_rests %}
                     <a href={% url 'rest-details' nearby_rest.id %}>
@@ -23,14 +23,19 @@
                             <div class="nearby-card-body">
                                 <h2>{{nearby_rest.name}}</h2>
                                 <h3 class="ratings">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
+                                    {% for condition in nearby_rest|rate_rest|get_conditions %}
+                                    {% if condition == 1 %}
+                                    <i class="fa fa-star yellow"></i>
+                                    {% elif condition == 2%}
+                                    <i class="fas fa-star-half yellow"></i>
+                                    {% else %}
+                                    <i class="fa fa-star grey"></i>
+                                    {% endif %}
+
+                                    {% endfor %}
                                 </h3>
                                 <p class="nearby-para">
-                                   {{nearby_rest.address}}
+                                    {{nearby_rest.address}}
                                 </p>
                             </div>
                         </div>
@@ -45,11 +50,16 @@
         <div class="rest-details-body">
             <h1 class="rest-details-headline">{{rest.name}}</h1>
             <h3 class="ratings">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="far fa-star"></i>
+                {% for condition in rest|rate_rest|get_conditions %}
+                {% if condition == 1 %}
+                <i class="fa fa-star yellow"></i>
+                {% elif condition == 2%}
+                <i class="fas fa-star-half yellow"></i>
+                {% else %}
+                <i class="fa fa-star grey"></i>
+                {% endif %}
+
+                {% endfor %}
             </h3>
             <p class="rest-details-para">
                 {{rest.address}} <br>
@@ -83,12 +93,18 @@
                     <div class="rest-dish-body">
                         <h3>{{dish.name}}</h3>
                         <h2 class="ratings sm-stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
+                            {% for condition in dish|rate_dish|get_conditions %}
+                            {% if condition == 1 %}
+                            <i class="fa fa-star yellow"></i>
+                            {% elif condition == 2%}
+                            <i class="fas fa-star-half yellow"></i>
+                            {% else %}
+                            <i class="fa fa-star grey"></i>
+                            {% endif %}
+
+                            {% endfor %}
                         </h2>
+                        <h2 class="dish-price">{{dish.price|currency}}</h2>
                         <div class="dish-actions">
                             {% if dish|is_in_cart:request.session.cart %}
                             <button class="btn rest-dish-btn btn-minus">-</button>
@@ -150,7 +166,7 @@
                     const parent = conext.parents('div.dish-actions');
                     parent.empty();
                     parent.append(`
-                    <button class="btn rest-dish-btn">View</button>
+                    <a  href="/dish/${data.dishID}" class="btn rest-dish-btn">View</a>
                     <button class="btn rest-dish-btn mg-left-2 btn-add" id={{dish.id}}>Add</button>
                     `);
                 } else {
@@ -225,6 +241,7 @@
                                                 <i class="fas fa-star"></i>
                                                 <i class="far fa-star"></i>
                                             </h2>
+                                            <h2 class="dish-price">₹${dish.fields.price} </h2>
                                             <div class="dish-actions">
                                                 
                                             </div>

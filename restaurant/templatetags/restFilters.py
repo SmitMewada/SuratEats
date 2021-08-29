@@ -49,6 +49,10 @@ def is_pending_req_active(page_name):
 def is_cust_active(page_name):
     return page_name == "Customers"
 
+@register.filter(name="is_tax_active")
+def is_cust_active(page_name):
+    return page_name == "Manage Tax Rate"
+
 @register.filter(name="get_user_name")
 def get_user_name(request):
     cust_id = request.session.get("customer_id")

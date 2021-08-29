@@ -11,4 +11,5 @@ from .ordersView import OrdersView
 from .getAreas import GetAreas
 from .invoiceGenerator import render_invoice
 from .dishDetailsView import DishDetailsView
-
+from .paymentView import PaymentsView
+from .dishRatingView import DishRating

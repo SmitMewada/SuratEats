@@ -68,6 +68,15 @@ ul {
     background-color: #B37A64;
 }
 
+.yellow {
+    color: var(--star-color);
+    cursor: pointer;
+}
+
+.grey {
+    color: #787878;
+}
+
 /******** HEADER STARTS **********/
 
 .header {
@@ -990,7 +999,6 @@ form {
 }
 
 .ratings i{
-    color: var(--star-color);
     font-size: 1.5rem;
 }
 
@@ -1022,8 +1030,8 @@ form {
 }
 
 .rest-main-img {
-    height: 40rem;
-    width: 64rem;
+    height: 50rem;
+    width: 80rem;
     object-fit: cover;
     border-radius: 3rem 0;
 }
@@ -1031,6 +1039,7 @@ form {
 .rest-details-header {
     display: flex;
     /* margin: 7rem 3rem 3rem 3rem; */
+    justify-content: space-between;
 }
 
 .rest-details-headline {
@@ -1054,7 +1063,6 @@ form {
     display: flex;
     flex-direction: column;
     max-width: 41.5rem;
-    margin-left: 4rem;
 }
 
 .nearby-headline {
@@ -1073,8 +1081,8 @@ form {
 
 .nearby-card {
     position: relative;
-    height: 17rem;
-    width: 17rem;
+    height: 20rem;
+    width: 20rem;
 }
 
 .nearby-card img {
@@ -1157,8 +1165,8 @@ form {
 }
 
 .rest-dish-card {
-    height: 17rem;
-    width: 17rem;
+    height: 20rem;
+    width: 20rem;
     position: relative;
     margin-left: 3rem;
     margin-bottom: 4rem;
@@ -1228,6 +1236,10 @@ form {
 .cart-card-body h3 {
     font-size: 1.2rem;
     margin-bottom: 1rem;
+}
+
+.dish-price {
+    color: #fff;
 }
 
 
@@ -1349,12 +1361,21 @@ form {
     color: #787878;
 }
 
+.order-link {
+    text-decoration: none;
+    color: #111;
+}
+
+
 /*********** Dish Details *************/
 
 .dish-details-page {
     height: 85vh;
     margin-top: 9rem;
     padding: 0 7rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .dish {
@@ -1426,6 +1447,37 @@ form {
 }
 
 
+.other-dishes {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.btn-dish-add {
+    border: 1px solid var(--secondary-color);
+    padding: 0.7rem 1.2rem;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: background-color .5s;
+}
+
+.btn-dish-add:hover {
+    color: #fff;
+    background-color: var(--secondary-color);
+}
+
+.dish-actionss {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.secondary {
+    color: var(--secondary-color);
+}
+
 @keyframes sildePara {
     0% {
         opacity: 0;
@@ -1441,3 +1493,40 @@ form {
 
 
 
+
+
+
+/* PAYMENT STYLES */
+
+.payment-view {
+    min-height: 80vh;
+    margin-top: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-container {
+    width: 100rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.or {
+    font-weight: 100;
+    font-size: 2rem;
+    margin: 2rem 0;
+    color: #787878;
+}
+
+.btn-cod button{
+    padding: 1rem 2rem;
+    width: 20rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}

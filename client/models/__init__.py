@@ -8,6 +8,7 @@ from .dish import Dish
 from .rating import Rating
 from .transaction import Transaction
 from .order import Order
+from .tax import Tax
 
 
 

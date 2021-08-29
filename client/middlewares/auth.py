@@ -11,10 +11,12 @@ def AuthMiddleware(get_response):
         auth = Authorization.objects.get(pk=1)
 
         try:
-            customer = Customer.objects.get(pk=auth_details.get("customer_id"))
+            
             if not auth_details.get("customer_id"):
                 request.session["cust_navbar"] = False
                 return redirect(f"/login?return_url={return_url}")
+            
+            customer = Customer.objects.get(pk=auth_details.get("customer_id"))
 
             if customer:
                 if not auth.id == customer.auth.id :
@@ -36,12 +38,13 @@ def ParameterizedMiddleware(get_response):
     def middleware(request, id):
         return_url = request.META["PATH_INFO"]
         auth_details = get_auth_creds(request)
-        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
-        auth = Authorization.objects.get(pk=1)
 
         if not auth_details.get("customer_id"):
             request.session["cust_navbar"] = False
             return redirect(f"/login?return_url={return_url}")
+
+        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
+        auth = Authorization.objects.get(pk=1)
 
         if customer:
             if not auth.id == customer.auth.id :
@@ -59,11 +62,12 @@ def AdminAuthMiddleware(get_response):
     def middleware(request):
         return_url = request.META["PATH_INFO"]
         auth_details = get_auth_creds(request)
-        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
-        auth = Authorization.objects.get(pk=3)
 
         if not auth_details.get("customer_id"):
             return redirect(f"/login?return_url={return_url}")
+
+        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
+        auth = Authorization.objects.get(pk=3)
 
         if customer:
             if not auth.id == customer.auth.id :
@@ -77,11 +81,12 @@ def ParaAdminAuthMiddleware(get_response):
     def middleware(request, id):
         return_url = request.META["PATH_INFO"]
         auth_details = get_auth_creds(request)
-        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
-        auth = Authorization.objects.get(pk=3)
 
         if not auth_details.get("customer_id"):
             return redirect(f"/login?return_url={return_url}")
+
+        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
+        auth = Authorization.objects.get(pk=3)
 
         if customer:
             if not auth.id == customer.auth.id :
@@ -96,11 +101,12 @@ def RestAuthMiddleware(get_response):
     def middleware(request):
         return_url = request.META["PATH_INFO"]
         auth_details = get_auth_creds(request)
-        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
-        auth = Authorization.objects.get(pk=2)
 
         if not auth_details.get("customer_id"):
             return redirect(f"/login?return_url={return_url}")
+
+        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
+        auth = Authorization.objects.get(pk=2)
 
         if customer:
             if not auth.id == customer.auth.id :
@@ -115,11 +121,12 @@ def ParaRestAuthMiddleware(get_response):
     def middleware(request, id):
         return_url = request.META["PATH_INFO"]
         auth_details = get_auth_creds(request)
-        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
-        auth = Authorization.objects.get(pk=2)
 
         if not auth_details.get("customer_id"):
             return redirect(f"/login?return_url={return_url}")
+
+        customer = Customer.objects.get(pk=auth_details.get("customer_id"))
+        auth = Authorization.objects.get(pk=2)
 
         if customer:
             if not auth.id == customer.auth.id :

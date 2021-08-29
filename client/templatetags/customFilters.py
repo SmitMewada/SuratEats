@@ -1,9 +1,60 @@
+from client.models.rating import Rating
 from django import template
 import math
 from client.views.customFuntions import calc_grand_total
 from client.models import Restaurant, Order, Dish
+import math
 
 register = template.Library()
+
+@register.filter(name="rate_dish")
+def rate_dish(dish):
+    ratings = Rating.objects.filter(dish=dish)
+    sum_rating = 0
+
+    for rating in ratings:
+        sum_rating = sum_rating + rating.rating
+
+    return sum_rating / ratings.count() if ratings.count() != 0 else 0
+
+@register.filter(name="get_conditions")
+def get_conditions(rating):
+    floored_rating = math.floor(rating)
+    return [1 if i < floored_rating else 2 if i == floored_rating and rating - float(floored_rating) >= 0.5 else 0 for i in range(0, 5)]
+
+
+@register.filter(name="rate_rest")
+def rate_rest(restaurant):
+    sum_rating = 0
+    dishes = Dish.objects.filter(restaurant=restaurant)
+    ratings = Rating.objects.filter(dish__in=dishes)
+
+    for rating in ratings:
+        sum_rating = sum_rating + rating.rating
+
+    return sum_rating / ratings.count() if ratings.count() != 0 else 0
+
+@register.filter(name="rating1")
+def rating1(rating):
+    return 1 <= int(rating) 
+
+@register.filter(name="rating2")
+def rating2(rating):
+    return 2 <= int(rating) 
+
+@register.filter(name="rating3")
+def rating3(rating):
+    return 3 <= int(rating) 
+
+@register.filter(name="rating4")
+def rating4(rating):
+    return 4 <= int(rating) 
+
+@register.filter(name="rating5")
+def rating5(rating):
+    return 5 <= int(rating) 
+
+
 
 @register.filter(name="get_grandtotal_from_order")
 def get_grandtotal_from_order(orders):

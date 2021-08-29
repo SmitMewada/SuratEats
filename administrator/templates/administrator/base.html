@@ -116,6 +116,13 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item">
+                        <a href={% url 'tax' %} class="btn-a btn-sidebar-item{% if page_name|is_tax_active %} active{% endif %}">
+                            <i class="fas fa-utensils"></i>
+                            Manage Tax
+                        </a>
+                    </li>
+
                 </ul>
             </aside>
 

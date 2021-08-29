@@ -18,7 +18,6 @@ class AdminHomeView(View):
 
         
         income_dataset = []
-        rest_dataset = []
         date_list = []
         
         order_dates = Order.objects.order_by().values("order_date").distinct()
