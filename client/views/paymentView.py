@@ -22,8 +22,8 @@ class PaymentsView(View):
         success = body.get("success")
 
         if success:
-            account_sid = "AC6abf4eb2c45127ae895e71fff9d447a3"
-            token = "55eaf8fc93dd7931b5cc68ec4597fc666"
+            account_sid = ""
+            token = ""
             message = "Your order is successfully placed! your order for "
 
             auth_creds = get_auth_creds(request)
